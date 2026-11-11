@@ -1,1 +1,155 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suano FM - Cyber Synth</title>
 
+<link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body>
+
+<div class="background-grid"></div>
+
+<div class="player-container">
+
+    <div class="header">
+        <div class="logo">
+            SUANO FM
+            <span>ORIGINALI MUZIKA 24/7</span>
+        </div>
+
+        <div class="onair" id="onairStatus">
+    <span class="dot" id="onairDot"></span>
+    <span id="onairText">ON AIR</span>
+</div>
+    </div>
+
+    <div class="stream-card">
+
+        <div class="cover-box">
+            <img
+                src="assets/suano-logo.png"
+                alt="Suano FM">
+        </div>
+
+        <div class="song-info">
+            <div class="label">DABAR ETERYJE</div>
+
+            <h2 id="songTitle">
+                The Midnight - Sunset
+            </h2>
+
+            <p>320 KBPS • STEREO</p>
+
+           <div class="listeners">
+  👥 <span id="listenerCount">0 klausytojų</span>
+</div>
+        </div>
+
+    </div>
+
+ 
+<div class="spectrum-panel">
+
+    <div class="spectrum-header">
+        <span>SPECTRUM ANALYZER</span>
+       <span id="timer">READY</span>
+    </div>
+
+    <div id="bars"></div>
+
+</div>
+
+
+
+
+
+    <div class="controls">
+
+        <button>⏮</button>
+
+        <button id="playBtn">
+    ▶
+</button>
+
+        <button>⏭</button>
+
+    </div>
+
+   <div class="votes">
+    <button class="good" onclick="vote(this, 'good')">
+        👍 GERAS
+    </button>
+
+    <button class="mid" onclick="vote(this, 'mid')">
+        😐 ŠIAIP SAU
+    </button>
+
+    <button class="bad" onclick="vote(this, 'bad')">
+        👎 BLOGAS
+    </button>
+</div>
+
+
+
+    <div class="status">
+        Prisijungta prie serverio
+    </div>
+
+    <div class="top-panel">
+
+        <h3>🏆 ŠIANDIENOS TOP 10</h3>
+
+        <ol>
+
+            <li>
+                The Midnight - Sunset
+                <span>57 👍</span>
+            </li>
+
+            <li>
+                FM-84 - Atlas
+                <span>49 👍</span>
+            </li>
+
+            <li>
+                Gunship - Tech Noir
+                <span>42 👍</span>
+            </li>
+
+            <li>
+                Timecop1983
+                <span>39 👍</span>
+            </li>
+
+            <li>
+                Kavinsky - Nightcall
+                <span>31 👍</span>
+            </li>
+
+        </ol>
+
+    </div>
+
+</div>
+
+
+<audio id="radioPlayer" preload="none">
+    <source
+        src="https://stream.zeno.fm/lustr3bpsafuv"
+        type="audio/mpeg">
+</audio>
+
+<!-- Pridedame Socket.io klientą -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+
+
+
+
+</body>
+</html>
