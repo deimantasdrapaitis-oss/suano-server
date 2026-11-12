@@ -1,32 +1,18 @@
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
+const { Pool } = require("pg");
 
-const dbPath = path.join(__dirname, "suano.db");
-
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error("DB klaida:", err.message);
-    } else {
-        console.log("Prisijungta prie SQLite duomenų bazės");
-    }
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
 });
 
-// Sukuriame lentelę, jei jos dar nėra
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS votes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            artist TEXT,
-            title TEXT UNIQUE,
-            score INTEGER DEFAULT 0
-        )
-    `, (err) => {
-        if (err) {
-            console.error("Lentelės kūrimo klaida:", err.message);
-        } else {
-            console.log("Lentelė 'votes' paruošta");
-        }
-    });
-});
+pool.query(`
+    CREATE TABLE IF NOT EXISTS votes (
+        id SERIAL PRIMARY KEY,
+        artist TEXT,
+        title TEXT UNIQUE,
+        score INTEGER DEFAULT 0
+    )
+`).then(() => console.log("Lentelė paruošta"))
+  .catch(err => console.error(err));
 
-module.exports = db;
+module.exports = pool;
