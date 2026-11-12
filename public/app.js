@@ -163,7 +163,7 @@ async function vote(btn, scoreType) {
     lastVotedSong = songKey;
 
     try {
-        await fetch("/api/vote", {
+        await fetch("https://suano-server.onrender.com/api/vote", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -174,6 +174,8 @@ async function vote(btn, scoreType) {
                 type: scoreType
             })
         });
+
+        loadTop();  // <-- pridėk šitą eilutę
 
         console.log("Balsas išsiųstas:", currentSong, scoreType);
     } catch (err) {
@@ -190,7 +192,7 @@ async function vote(btn, scoreType) {
 // ============================================
 async function loadTop() {
     try {
-        const res = await fetch("/api/vote/top");
+    const res = await fetch("https://suano-server.onrender.com/api/vote/top");
         const data = await res.json();
 
         const ol = document.querySelector(".top-panel ol");
@@ -215,13 +217,6 @@ loadTop();
 // ============================================
 // Socket.io – vienas prisijungimas viskam
 // ============================================
-if (typeof io !== "undefined") {
-    const socket = io();
-
-    // TOP atnaujinimas
-    socket.on("refresh", loadTop);
-
-    // Klausytojų skaičius
 
 function getListenerWord(count) {
     const n = Math.abs(count) % 100;
@@ -232,12 +227,26 @@ function getListenerWord(count) {
     return "klausytojų";
 }
 
-socket.on("listeners", (count) => {
-    const el = document.getElementById("listenerCount");
-    if (el) {
-        el.textContent = count + " " + getListenerWord(count);
-    }
+
+
+if (typeof io !== "undefined") {
+const socket = io("https://suano-server.onrender.com", {
+    transports: ["websocket", "polling"],
+    forceNew: true
 });
+
+    socket.on("connect", () => {
+        console.log("Prisijungta prie serverio");
+    });
+
+    socket.on("listeners", (count) => {
+        const el = document.getElementById("listenerCount");
+        if (el) {
+            el.textContent = count + " " + getListenerWord(count);
+        }
+    });
+
+    socket.on("refresh", loadTop);
 }
 
 
@@ -267,3 +276,46 @@ function updateTime() {
 // Atnaujiname kas sekundę
 setInterval(updateTime, 1000);
 updateTime(); // iš karto
+
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        console.log("Programėlė pabudo");
+        setTimeout(() => {
+            loadTop();
+            updateNowPlaying();
+        }, 1000);
+        
+        if (playing && player.paused) {
+            player.play().catch(e => console.log("Play klaida:", e));
+        }
+    }
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const { NativeAudio } = window.Capacitor?.Plugins || {};
+        if (NativeAudio) {
+            await NativeAudio.preload({
+                assetId: "radio",
+                assetPath: "https://stream.zeno.fm/lustr3bpsafuv",
+                audioChannelNum: 1,
+                isUrl: true
+            });
+            console.log("Native audio paruoštas");
+        }
+    } catch (e) {
+        console.log("Native audio klaida:", e);
+    }
+});
+
+// Automatiškai paleidžiame grojimą
+setTimeout(() => {
+    player.play().then(() => {
+        playBtn.innerHTML = "⏸";
+        playing = true;
+        updateOnAirStatus();
+    }).catch(e => {
+        console.log("Autoplay blokuotas:", e);
+    });
+}, 1000);
