@@ -314,19 +314,17 @@ function updateBarColors() {
     const bars = document.querySelectorAll(".bar");
     bars.forEach(bar => {
         const height = parseInt(bar.style.height) || 0;
-        const maxHeight = 50;
-        const ratio = Math.min(height / maxHeight, 1);
+        const ratio = Math.min(height / 50, 1);
         
-        // Spalva nuo rožinės iki žydros
-        const r = Math.floor(255 - ratio * 100);
-        const g = Math.floor(102 + ratio * 100);
-        const b = Math.floor(204 + ratio * 51);
+        // Žemiau – raudona, aukščiau – žalia
+        const r = Math.floor(255 * (1 - ratio));
+        const g = Math.floor(255 * ratio);
+        const b = 100;
         
-        bar.style.background = `linear-gradient(to top, rgb(${r},${g},${b}), #00e5ff)`;
+        bar.style.background = `rgb(${r}, ${g}, ${b})`;
     });
 }
 
-// Kviečiame kartu su animacija
 setInterval(updateBarColors, 100);
 
 
