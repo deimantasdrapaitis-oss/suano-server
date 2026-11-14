@@ -333,6 +333,6 @@ function updateBarColors() {
 
 setInterval(updateBarColors, 100);
 
-
+}
 
 
