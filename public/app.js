@@ -58,20 +58,6 @@ playBtn.addEventListener("click", () => {
 updateOnAirStatus();
 
 
-// Paleidžiame po pirmo paspaudimo bet kur
-document.addEventListener("click", function startOnce() {
-    player.play().then(() => {
-        playBtn.innerHTML = "⏸";
-        playing = true;
-        updateOnAirStatus();
-    }).catch(e => console.log("Play klaida:", e));
-    
-    document.removeEventListener("click", startOnce);
-}, { once: true });
-
-
-
-
 // ============================================
 // Dabartinė daina + balsavimo kontrolė
 // ============================================
@@ -323,32 +309,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Automatiškai paleidžiame grojimą
-setTimeout(() => {
-    player.play().then(() => {
-        playBtn.innerHTML = "⏸";
-        playing = true;
-        updateOnAirStatus();
-    }).catch(e => {
-        console.log("Autoplay blokuotas:", e);
-    });
-}, 1000);
 
-// Bandom autoplay
-player.play().then(() => {
-    playBtn.innerHTML = "⏸";
-    playing = true;
-    updateOnAirStatus();
-}).catch(() => {
-    // Jei blokuoja – paleidžiame po pirmo paspaudimo
-    document.body.addEventListener("click", () => {
-        player.play().then(() => {
-            playBtn.innerHTML = "⏸";
-            playing = true;
-            updateOnAirStatus();
-        });
-    }, { once: true });
-});
+
+
 
 
 
