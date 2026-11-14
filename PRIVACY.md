@@ -12,7 +12,7 @@ Suano FM programėlė renka šiuos duomenis:
 - Balsai rodomi TOP 10 sąraše
 - Klausytojų skaičius rodomas programėlėje
 
-## Ką nerenkame
+## Ko nerenkame
 
 - Vardo
 - El. pašto
