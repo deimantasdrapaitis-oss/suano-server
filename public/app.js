@@ -239,15 +239,22 @@ const socket = io("https://suano-server.onrender.com", {
         console.log("Prisijungta prie serverio");
     });
 
-    socket.on("listeners", (count) => {
-        const el = document.getElementById("listenerCount");
-        if (el) {
-            el.textContent = count + " " + getListenerWord(count);
-        }
-    });
+socket.on("listeners", (count) => {
+    const el = document.getElementById("listenerCount");
+    if (el) {
+        el.textContent = count + " " + getListenerWord(count);
+    }
+});
 
-    socket.on("refresh", loadTop);
-}
+socket.on("stats", (data) => {
+    const totalEl = document.getElementById("totalVisits");
+    const todayEl = document.getElementById("todayVisits");
+    
+    if (totalEl) totalEl.textContent = data.total;
+    if (todayEl) todayEl.textContent = data.today;
+});
+
+socket.on("refresh", loadTop);
 
 
 
