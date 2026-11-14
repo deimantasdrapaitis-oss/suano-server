@@ -6,8 +6,15 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@anuradev/capacitor-background-mode": "^8.1.0",
+    "@capacitor-community/native-audio": "^8.0.0",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "axios": "^1.21.1",
     "cors": "^2.8.5",
     "express": "^4.22.3",
+    "pg": "^8.23.1",
     "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7"
   }
