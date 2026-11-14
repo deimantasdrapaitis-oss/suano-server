@@ -1,15 +1,4 @@
 
-// Paleidžiame po pirmo paspaudimo bet kur
-document.addEventListener("click", function startOnce() {
-    player.play().then(() => {
-        playBtn.innerHTML = "⏸";
-        playing = true;
-        updateOnAirStatus();
-    }).catch(e => console.log("Play klaida:", e));
-    
-    document.removeEventListener("click", startOnce);
-}, { once: true });
-
 
 
 // ============================================
@@ -68,6 +57,17 @@ playBtn.addEventListener("click", () => {
 // Pradžioje – raudona
 updateOnAirStatus();
 
+
+// Paleidžiame po pirmo paspaudimo bet kur
+document.addEventListener("click", function startOnce() {
+    player.play().then(() => {
+        playBtn.innerHTML = "⏸";
+        playing = true;
+        updateOnAirStatus();
+    }).catch(e => console.log("Play klaida:", e));
+    
+    document.removeEventListener("click", startOnce);
+}, { once: true });
 
 
 
