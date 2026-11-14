@@ -24,21 +24,38 @@ app.use("/api/metadata", metadataRoutes);
 app.use("/api/vote", voteRoutes);
 
 // ============================================
-// Klausytojų skaičius
+// Klausytojų skaičius + statistika
 // ============================================
-let listenerCount = 0;
+let totalVisits = 0;
+let todayVisits = 0;
+let lastDate = new Date().toDateString();
 
 io.on("connection", socket => {
-  listenerCount++;
-  console.log("Prisijungė. Dabar klausytojų:", listenerCount);
+  // Dabartiniai klausytojai
+  const currentListeners = io.engine.clientsCount;
+  console.log("Prisijungė. Dabar klausytojų:", currentListeners);
+  io.emit("listeners", currentListeners);
 
-  // Siunčiame visiems naują skaičių
-  io.emit("listeners", listenerCount);
+  // Iš viso apsilankymų
+  totalVisits++;
+
+  // Šiandien
+  const today = new Date().toDateString();
+  if (today !== lastDate) {
+    todayVisits = 0;
+    lastDate = today;
+  }
+  todayVisits++;
+
+  io.emit("stats", {
+    total: totalVisits,
+    today: todayVisits
+  });
 
   socket.on("disconnect", () => {
-    listenerCount--;
-    console.log("Atsijungė. Dabar klausytojų:", listenerCount);
-    io.emit("listeners", listenerCount);
+    const currentListeners = io.engine.clientsCount;
+    console.log("Atsijungė. Dabar klausytojų:", currentListeners);
+    io.emit("listeners", currentListeners);
   });
 });
 
