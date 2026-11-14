@@ -1,34 +1,62 @@
-const { Pool } = require("pg");
+const SUPABASE_URL = "https://nlxrndavgoqsxubexgew.supabase.co";
+const SUPABASE_KEY = "sb_publishable_n2owILRv4O7w0i7e0mP2_Q_460vqRql";
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-    max: 5,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000
-});
+async function query(sql, params = []) {
+    return [];
+}
 
-pool.on("error", (err) => {
-    console.error("DB ryšio klaida:", err.message);
-});
-
-async function initDB() {
+async function addVote(artist, title, points) {
     try {
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS votes (
-                id SERIAL PRIMARY KEY,
-                artist TEXT,
-                title TEXT UNIQUE,
-                score INTEGER DEFAULT 0
-            )
-        `);
-        console.log("Lentelė paruošta");
+        const check = await fetch(`${SUPABASE_URL}/rest/v1/votes?title=eq.${encodeURIComponent(title)}`, {
+            headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        const existing = await check.json();
+
+        if (existing.length > 0) {
+            const newScore = existing[0].score + points;
+            await fetch(`${SUPABASE_URL}/rest/v1/votes?title=eq.${encodeURIComponent(title)}`, {
+                method: "PATCH",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({ score: newScore })
+            });
+        } else {
+            await fetch(`${SUPABASE_URL}/rest/v1/votes`, {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({ artist, title, score: points })
+            });
+        }
     } catch (err) {
-        console.error("DB init klaida:", err.message);
-        setTimeout(initDB, 5000);
+        console.error("Balsavimo klaida:", err);
     }
 }
 
-initDB();
+async function getTop() {
+    try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?select=*&order=score.desc&limit=10`, {
+            headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": `Bearer ${SUPABASE_KEY}`
+            }
+        });
+        return await res.json();
+    } catch (err) {
+        console.error("TOP klaida:", err);
+        return [];
+    }
+}
 
-module.exports = pool;
+module.exports = { query, addVote, getTop };
