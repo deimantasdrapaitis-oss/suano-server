@@ -25,4 +25,5 @@ Duomenys saugomi serveryje (Render + PostgreSQL).
 
 ## Kontaktai
 
-Jei turite klausimų: [jūsų el. paštas]
+Deimantas Drapaitis  
+Jei turite klausimų: deimantas_2000@yahoo.com
