@@ -271,15 +271,6 @@ opacity:.3;
     gap: 2px;
 }
 
-.bar{
-    flex:1;
-    background:linear-gradient(
-       to top,
-       #ff2b92,
-       #00e5ff
-    );
-    border-radius:4px 4px 0 0;
-}
 
 .controls{
 
