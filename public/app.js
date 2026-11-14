@@ -329,4 +329,3 @@ setInterval(updateBarColors, 100);
 
 
 
-
