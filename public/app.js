@@ -316,17 +316,15 @@ function updateBarColors() {
         const height = parseInt(bar.style.height) || 0;
         const ratio = Math.min(height / 50, 1);
         
-        // Žemiau – raudona, aukščiau – žalia
         const r = Math.floor(255 * (1 - ratio));
         const g = Math.floor(255 * ratio);
         const b = 100;
         
-        bar.style.background = `rgb(${r}, ${g}, ${b})`;
+        bar.style.setProperty("background", `rgb(${r}, ${g}, ${b})`, "important");
     });
 }
 
 setInterval(updateBarColors, 100);
-
 
 
 
