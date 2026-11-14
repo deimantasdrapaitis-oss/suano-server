@@ -65,6 +65,7 @@ body{
     box-shadow: 0 0 3px #00e5ff;
     border-radius: 1px;
     margin: 0 2px;
+    transition: height 0.1s ease;
 }
 
 .onair.playing {
