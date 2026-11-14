@@ -333,3 +333,23 @@ setTimeout(() => {
         console.log("Autoplay blokuotas:", e);
     });
 }, 1000);
+
+// Bandom autoplay
+player.play().then(() => {
+    playBtn.innerHTML = "⏸";
+    playing = true;
+    updateOnAirStatus();
+}).catch(() => {
+    // Jei blokuoja – paleidžiame po pirmo paspaudimo
+    document.body.addEventListener("click", () => {
+        player.play().then(() => {
+            playBtn.innerHTML = "⏸";
+            playing = true;
+            updateOnAirStatus();
+        });
+    }, { once: true });
+});
+
+
+
+
